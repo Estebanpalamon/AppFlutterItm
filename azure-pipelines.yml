@@ -1,0 +1,31 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - '*'
+
+pool:
+  vmImage: 'macos-latest'
+
+steps:
+  - task: FlutterInstaller@0
+    inputs:
+      channel: 'stable'
+
+  - task: FlutterCommand@0
+    inputs:
+      command: 'pub get'
+      
+  - task: FlutterCommand@0
+    inputs:
+      command: 'build ios --release'
+      
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'build/ios/iphoneos/*'
+      ArtifactName: 'ios_build'
+      publishLocation: 'Container'
